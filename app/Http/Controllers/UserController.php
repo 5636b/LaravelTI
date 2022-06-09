@@ -19,11 +19,10 @@ class UserController extends Controller
     {
         // $user = User::where('id', $id)->first();
 
-        if (!$user = User::find($id)) {
+        if (!$user = User::find($id))
             return redirect()->route('users.index');
-        } else {
-            return view('users.show', compact('user'));
-        }
+
+        return view('users.show', compact('user'));
     }
 
     public function create()
@@ -65,5 +64,15 @@ class UserController extends Controller
 
             return redirect()->route('users.index');
         }
+    }
+
+    public function destroy($id)
+    {
+        if (!$user = User::find($id))
+            return redirect()->route('users.index');
+
+        $user->delete();
+
+        return redirect()->route('users.index');
     }
 }
