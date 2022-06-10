@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreGameRequest;
-use App\Http\Requests\UpdateGameRequest;
 use App\Models\Game;
+use Illuminate\Http\Request;
 
 class GameController extends Controller
 {
@@ -16,7 +15,7 @@ class GameController extends Controller
     public function index()
     {
         $jogos = Game::get();
-        return view('game.index', compact($jogos));
+        return view('game.index', ['jogos' => $jogos]);
     }
 
     /**
@@ -32,10 +31,10 @@ class GameController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreGameRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreGameRequest $request)
+    public function store(Request $request)
     {
         $data = $request->all();
 
@@ -47,7 +46,7 @@ class GameController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Game  $game
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -55,40 +54,55 @@ class GameController extends Controller
         if (!$jogos = Game::find($id))
             return redirect()->route('game.index');
 
-        return view('game.show', compact('jogos'));
+        return redirect()->route('game.show');
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Game  $game
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Game $game)
+    public function edit($id)
     {
-        //
+        if (!$jogos = Game::find($id))
+            return redirect()->route('game.index');
+
+        return view('game.edit', compact('jogos'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateGameRequest  $request
-     * @param  \App\Models\Game  $game
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateGameRequest $request, Game $game)
+    public function update(Request $request, $id)
     {
-        //
+        if (!$jogos = Game::find($id))
+            return redirect()->route('game.index');
+
+        $data = $request->only('nome', 'ano_lacamento', 'genero');
+
+        $jogos->update($data);
+
+        return redirect()->route('game.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Game  $game
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Game $game)
+    public function destroy($id)
     {
-        //
+        if (!$jogos = Game::find($id))
+            return redirect()->route('game.index');
+
+        $jogos->delete();
+
+        return redirect()->route('game.index');
     }
 }

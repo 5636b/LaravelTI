@@ -51,6 +51,7 @@ class UserController extends Controller
 
         return view('users.edit', compact('user'));
     }
+    
     public function update(StoreUpdateUserFormRequest $request, $id)
     {
         if (!$user = User::find($id)) {
