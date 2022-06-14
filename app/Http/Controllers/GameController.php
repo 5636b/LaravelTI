@@ -15,7 +15,8 @@ class GameController extends Controller
     public function index()
     {
         $jogos = Game::get();
-        return view('game.index', ['jogos' => $jogos]);
+        
+        return view('game.index', compact('jogos'));
     }
 
     /**
@@ -54,7 +55,7 @@ class GameController extends Controller
         if (!$jogos = Game::find($id))
             return redirect()->route('game.index');
 
-        return redirect()->route('game.show');
+        return view('game.show', compact('jogos'));
     }
 
     /**
@@ -65,10 +66,11 @@ class GameController extends Controller
      */
     public function edit($id)
     {
-        if (!$jogos = Game::find($id))
+        if (!$jogos = Game::find($id)) {
             return redirect()->route('game.index');
 
-        return view('game.edit', compact('jogos'));
+            return view('game.edit', compact('jogos'));
+        }
     }
 
     /**
@@ -83,7 +85,7 @@ class GameController extends Controller
         if (!$jogos = Game::find($id))
             return redirect()->route('game.index');
 
-        $data = $request->only('nome', 'ano_lacamento', 'genero');
+        $data = $request->only('nome', 'ano_lancamento', 'genero');
 
         $jogos->update($data);
 
